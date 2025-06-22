@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MCP基本設定ガイド</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #111827;
+            color: #d1d5db;
+        }
+        .code-block {
+            background-color: #1f2937;
+            border: 1px solid #374151;
+            border-radius: 0.5rem;
+            margin-bottom: 1.5rem;
+            overflow: hidden;
+        }
+        .code-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.5rem 1rem;
+            background-color: #374151;
+            font-size: 0.875rem;
+            color: #e5e7eb;
+        }
+        .code-content {
+            padding: 1rem;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+            font-family: monospace;
+            font-size: 0.9rem;
+            line-height: 1.5;
+            color: #d1d5db;
+        }
+        .copy-btn {
+            background-color: #4b5563;
+            color: #fff;
+            border: none;
+            padding: 0.25rem 0.75rem;
+            border-radius: 0.375rem;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+        .copy-btn:hover {
+            background-color: #6b7280;
+        }
+        .copy-btn.copied {
+            background-color: #22c55e;
+        }
+        .tab-btn {
+            padding: 0.5rem 1rem;
+            border-radius: 0.375rem;
+            cursor: pointer;
+            background-color: transparent;
+            color: #9ca3af;
+            border: 1px solid #374151;
+            margin-right: 0.5rem;
+        }
+        .tab-btn.active {
+            background-color: #4f46e5;
+            color: #fff;
+            border-color: #4f46e5;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="max-w-4xl mx-auto p-4 sm:p-6 lg:p-8">
+        
+        <header class="mb-10">
+            <h1 class="text-3xl sm:text-4xl font-bold text-white mb-2">Part.1: MCPの基本</h1>
+            <p class="text-lg text-gray-400">MCP (Multi-turn Conversational Protocol) の基本的な環境構築と利用方法のガイドです。</p>
+        </header>
+
+        <main class="space-y-12">
+            <!-- Step 1 -->
+            <section>
+                <h2 class="text-2xl font-bold text-white border-l-4 border-indigo-500 pl-4 mb-6">1. プロジェクト環境構築</h2>
+                <div class="tabs" id="env-tabs">
+                    <button class="tab-btn active" data-group="env" data-tab="macos-linux">macOS / Linux</button>
+                    <button class="tab-btn" data-group="env" data-tab="windows">Windows</button>
+                </div>
+                <div id="env-macos-linux" class="tab-content mt-4">
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span>macOS / Linux</span>
+                            <button class="copy-btn" onclick="copyCode(this, 'env-code-1')">コピー</button>
+                        </div>
+                        <pre id="env-code-1" class="code-content"><code># 新しいディレクトリとプロジェクトを作成
+uv init mcp-basic-python
+cd mcp-basic-python
+
+# 仮想環境を作成し、仮想環境を有効化
+uv venv
+source .venv/bin/activate
+
+# 仮想環境にパッケージの依存関係をインストール
+uv add "mcp[cli]"</code></pre>
+                    </div>
+                </div>
+                <div id="env-windows" class="tab-content mt-4" style="display: none;">
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span>Windows</span>
+                            <button class="copy-btn" onclick="copyCode(this, 'env-code-2')">コピー</button>
+                        </div>
+                        <pre id="env-code-2" class="code-content"><code># 新しいディレクトリとプロジェクトを作成
+uv init mcp-basic-python
+cd mcp-basic-python
+
+# 仮想環境を作成し、仮想環境を有効化
+uv venv
+.venv\Scripts\activate
+
+# 仮想環境にパッケージの依存関係をインストール
+uv add "mcp[cli]"</code></pre>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Step 2 -->
+            <section>
+                <h2 class="text-2xl font-bold text-white border-l-4 border-indigo-500 pl-4 mb-6">2. main.pyの書き換え</h2>
+                <p class="mb-4 text-gray-300">main.pyを以下のコードに書き換えて下さい。</p>
+                <div class="code-block">
+                    <div class="code-header">
+                        <span>main.py</span>
+                        <button class="copy-btn" onclick="copyCode(this, 'main-py-code')">コピー</button>
+                    </div>
+                    <pre id="main-py-code" class="code-content"><code>from mcp.server.fastmcp import FastMCP
+
+# Initialize FastMCP server
+mcp = FastMCP("mcp-basic-python")
+
+# Add an addition tool
+@mcp.tool()
+def add(a: int, b: int) -> int:
+    """Add two numbers"""
+    return a + b
+
+
+# Add a dynamic greeting resource
+@mcp.resource("greeting://{name}")
+def get_greeting(name: str) -> str:
+    """Get a personalized greeting"""
+    return f"Hello, {name}!"
+
+
+if __name__ == "__main__":
+    # Initialize and run the server
+    mcp.run(transport='stdio')</code></pre>
+                </div>
+            </section>
+
+            <!-- Step 3 -->
+            <section>
+                <h2 class="text-2xl font-bold text-white border-l-4 border-indigo-500 pl-4 mb-6">3. MCPクライアントの設定</h2>
+                <h3 class="text-xl font-semibold text-indigo-300 mb-4">Claude Desktopの場合</h3>
+                <p class="mb-4 text-gray-300">お使いのOSに合わせて、以下のコマンドを実行し設定ファイルを開きます。</p>
+                <div class="tabs" id="config-tabs">
+                    <button class="tab-btn active" data-group="config" data-tab="macos-linux">macOS / Linux</button>
+                    <button class="tab-btn" data-group="config" data-tab="windows">Windows</button>
+                </div>
+                <div id="config-macos-linux" class="tab-content mt-4">
+                     <div class="code-block">
+                        <div class="code-header">
+                            <span>macOS / Linux</span>
+                            <button class="copy-btn" onclick="copyCode(this, 'config-cmd-1')">コピー</button>
+                        </div>
+                        <pre id="config-cmd-1" class="code-content"><code>code ~/Library/Application\ Support/Claude/claude_desktop_config.json</code></pre>
+                    </div>
+                </div>
+                <div id="config-windows" class="tab-content mt-4" style="display: none;">
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span>Windows</span>
+                            <button class="copy-btn" onclick="copyCode(this, 'config-cmd-2')">コピー</button>
+                        </div>
+                        <pre id="config-cmd-2" class="code-content"><code>code $env:AppData\Claude\claude_desktop_config.json</code></pre>
+                    </div>
+                </div>
+                                
+                <div class="mb-4 p-4 bg-blue-800/20 border border-blue-500/30 rounded-lg">
+                    <p class="font-bold text-blue-300 mb-2">NOTE:</p>
+                    <p class="text-gray-300 mb-4">`code`コマンドが使えない場合は、以下のコマンドでディレクトリを開いてから、手動で`claude_desktop_config.json`ファイルを作成・編集してください。</p>
+                    
+                    <div class="tabs mb-2">
+                        <button class="tab-btn active" data-group="dir" data-tab="macos-linux" style="font-size: 0.875rem; padding: 0.25rem 0.75rem;">macOS / Linux</button>
+                        <button class="tab-btn" data-group="dir" data-tab="windows" style="font-size: 0.875rem; padding: 0.25rem 0.75rem;">Windows</button>
+                    </div>
+                    
+                    <div id="dir-macos-linux" class="tab-content">
+                        <div class="bg-gray-900 rounded p-3 font-mono text-sm text-gray-200 relative">
+                            <code id="dir-code-1">open ~/Library/Application\ Support/Claude/</code>
+                            <button class="copy-btn absolute top-2 right-2" onclick="copyCode(this, 'dir-code-1')" style="font-size: 0.75rem; padding: 0.125rem 0.5rem;">コピー</button>
+                        </div>
+                    </div>
+                    <div id="dir-windows" class="tab-content" style="display: none;">
+                        <div class="bg-gray-900 rounded p-3 font-mono text-sm text-gray-200 relative">
+                            <code id="dir-code-2">explorer $env:AppData\Claude\</code>
+                            <button class="copy-btn absolute top-2 right-2" onclick="copyCode(this, 'dir-code-2')" style="font-size: 0.75rem; padding: 0.125rem 0.5rem;">コピー</button>
+                        </div>
+                    </div>
+                </div>
+
+                <p class="mt-6 mb-4 text-gray-300">開いた `claude_desktop_config.json` に以下の内容を追記します。</p>
+                <div class="code-block">
+                    <div class="code-header">
+                        <span>claude_desktop_config.json</span>
+                        <button class="copy-btn" onclick="copyCode(this, 'config-json-code')">コピー</button>
+                    </div>
+                    <pre id="config-json-code" class="code-content"><code>{
+  "mcpServers": {
+    "mcp-basic-python": {
+      "command": "uv",
+      "args": [
+        "--directory",
+        "<ここを絶対パスに書き換えて下さい>",
+        "run",
+        "python",
+        "main.py"
+      ]
+    }
+  }
+}</code></pre>
+                </div>
+
+                <div class="mt-6 p-4 bg-gray-800 border border-yellow-500/30 rounded-lg">
+                    <p class="font-bold text-yellow-300 mb-2">NOTE:</p>
+                    <p class="text-gray-300 mb-4">`command`フィールドに`uv`実行ファイルのフルパスを指定する必要がある場合があります。その時は、以下のコマンドでパスを取得できます。</p>
+                    
+                    <div class="tabs mb-2">
+                        <button class="tab-btn active" data-group="path" data-tab="macos-linux" style="font-size: 0.875rem; padding: 0.25rem 0.75rem;">macOS / Linux</button>
+                        <button class="tab-btn" data-group="path" data-tab="windows" style="font-size: 0.875rem; padding: 0.25rem 0.75rem;">Windows</button>
+                    </div>
+                    
+                    <div id="path-macos-linux" class="tab-content">
+                        <div class="bg-gray-900 rounded p-3 font-mono text-sm text-gray-200 relative">
+                            <code id="path-code-1">which uv</code>
+                            <button class="copy-btn absolute top-2 right-2" onclick="copyCode(this, 'path-code-1')" style="font-size: 0.75rem; padding: 0.125rem 0.5rem;">コピー</button>
+                        </div>
+                    </div>
+                    <div id="path-windows" class="tab-content" style="display: none;">
+                        <div class="bg-gray-900 rounded p-3 font-mono text-sm text-gray-200 relative">
+                            <code id="path-code-2">where uv</code>
+                            <button class="copy-btn absolute top-2 right-2" onclick="copyCode(this, 'path-code-2')" style="font-size: 0.75rem; padding: 0.125rem 0.5rem;">コピー</button>
+                        </div>
+                    </div>
+                </div>
+
+                <p class="mt-6 mb-4 text-gray-300">プロジェクトの絶対パスは、以下のコマンドで確認できます。表示されたパスを `claude_desktop_config.json` の `<ここを絶対パスに書き換えて下さい>` の部分に貼り付けてください。</p>
+                 <div class="code-block">
+                    <div class="code-header">
+                        <span>Bash</span>
+                        <button class="copy-btn" onclick="copyCode(this, 'pwd-code')">コピー</button>
+                    </div>
+                    <pre id="pwd-code" class="code-content"><code>pwd
+
+# 実行例：/Users/USER_NAME/Desktop/MCPハンズオン/mcp-basic-python</code></pre>
+                </div>
+            </section>
+
+            <!-- Step 4 -->
+            <section>
+                <h2 class="text-2xl font-bold text-white border-l-4 border-indigo-500 pl-4 mb-6">4. MCPクライアントから呼び出し</h2>
+                <h3 class="text-xl font-semibold text-indigo-300 mb-4">Claude Desktop</h3>
+                <ol class="list-decimal list-inside space-y-3 text-gray-300 mb-6">
+                    <li>Claude Desktopを起動します（すでに起動中の場合は、再起動してください）。</li>
+                    <li>「検索とツール」を開き、「mcp-basic-python」が追加されていることを確認します。</li>
+                    <li>以下のプロンプトを試してみてください。</li>
+                </ol>
+
+                <div class="code-block">
+                    <div class="code-header">
+                        <span>プロンプト例 1</span>
+                        <button class="copy-btn" onclick="copyCode(this, 'prompt-1')">コピー</button>
+                    </div>
+                    <pre id="prompt-1" class="code-content"><code>mcp-basic-pythonで可能なツールを表示</code></pre>
+                </div>
+                <div class="code-block">
+                    <div class="code-header">
+                        <span>プロンプト例 2</span>
+                        <button class="copy-btn" onclick="copyCode(this, 'prompt-2')">コピー</button>
+                    </div>
+                    <pre id="prompt-2" class="code-content"><code>10+100を計算</code></pre>
+                </div>
+            </section>
+
+            <!-- MCP検索とツールの画像 -->
+            <section>
+                <h2 class="text-2xl font-bold text-white border-l-4 border-indigo-500 pl-4 mb-6">補足： Claude DesktopのMCP構築完了画面</h2>
+                <p class="mb-4 text-gray-300">Claude Desktopで「mcp-basic-python」が正常に追加された状態の画面例です。</p>
+                <div class="flex justify-center">
+                    <img src="assets/MCPの検索とツール.png" alt="MCPの検索とツール画面" class="max-w-full h-auto rounded-lg border border-gray-600">
+                </div>
+            </section>
+        </main>
+        
+        <footer class="text-center mt-12 py-6 border-t border-gray-700">
+            <p class="text-gray-500">MCP Basic Setup Guide</p>
+        </footer>
+    </div>
+
+    <script>
+        // Initialize tab functionality when page loads
+        document.addEventListener('DOMContentLoaded', function() {
+            // Add click event listeners to all tab buttons
+            document.querySelectorAll('.tab-btn').forEach(button => {
+                button.addEventListener('click', function() {
+                    const group = this.getAttribute('data-group');
+                    const tab = this.getAttribute('data-tab');
+                    showTab(group, tab);
+                });
+            });
+        });
+
+        function showTab(group, tabId) {
+            // Hide all tab content divs in the same group (only .tab-content elements)
+            document.querySelectorAll(`.tab-content[id^="${group}-"]`).forEach(tabContent => {
+                tabContent.style.display = 'none';
+            });
+            
+            // Show the selected tab
+            const targetTab = document.getElementById(`${group}-${tabId}`);
+            if (targetTab) {
+                targetTab.style.display = 'block';
+            } else {
+                console.error(`Target tab not found: ${group}-${tabId}`);
+            }
+            
+            // Update button states for this group only
+            document.querySelectorAll(`[data-group="${group}"]`).forEach(btn => {
+                btn.classList.remove('active');
+                if (btn.getAttribute('data-tab') === tabId) {
+                    btn.classList.add('active');
+                }
+            });
+        }
+
+        function copyCode(button, elementId) {
+            const codeElement = document.getElementById(elementId);
+            const textToCopy = codeElement.innerText || codeElement.textContent;
+            
+            // Using a temporary textarea element for clipboard compatibility
+            const textArea = document.createElement('textarea');
+            textArea.value = textToCopy;
+            document.body.appendChild(textArea);
+            textArea.select();
+            try {
+                document.execCommand('copy');
+                button.textContent = 'コピー完了!';
+                button.classList.add('copied');
+                setTimeout(() => {
+                    button.textContent = 'コピー';
+                    button.classList.remove('copied');
+                }, 2000);
+            } catch (err) {
+                console.error('コピーに失敗しました:', err);
+                button.textContent = '失敗';
+                 setTimeout(() => {
+                    button.textContent = 'コピー';
+                }, 2000);
+            }
+            document.body.removeChild(textArea);
+        }
+    </script>
+</body>
+</html>
