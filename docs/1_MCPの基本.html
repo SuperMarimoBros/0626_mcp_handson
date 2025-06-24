@@ -92,11 +92,11 @@
                             <button class="copy-btn" onclick="copyCode(this, 'env-code-1')">コピー</button>
                         </div>
                         <pre id="env-code-1" class="code-content"><code># 新しいディレクトリとプロジェクトを作成
-uv init mcp-basic-python
+uv init mcp-basic-python -p 3.13
 cd mcp-basic-python
 
 # 仮想環境を作成し、仮想環境を有効化
-uv venv -p 3.13
+uv venv
 source .venv/bin/activate
 
 # 仮想環境にパッケージの依存関係をインストール
@@ -110,11 +110,11 @@ uv add "mcp[cli]"</code></pre>
                             <button class="copy-btn" onclick="copyCode(this, 'env-code-2')">コピー</button>
                         </div>
                         <pre id="env-code-2" class="code-content"><code># 新しいディレクトリとプロジェクトを作成
-uv init mcp-basic-python
+uv init mcp-basic-python -p 3.13
 cd mcp-basic-python
 
 # 仮想環境を作成し、仮想環境を有効化
-uv venv -p 3.13
+uv venv
 .venv\Scripts\activate
 
 # 仮想環境にパッケージの依存関係をインストール
