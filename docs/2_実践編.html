@@ -104,7 +104,7 @@ source .venv/bin/activate
 uv add "mcp[cli]" requests
 
 # データベースとCSVをディレクトリ内にコピー
-wget https://raw.githubusercontent.com/SuperMarimoBros/0626_mcp_handson/blob/main/mcp-practice-python/garbage_collection.db
+wget https://raw.githubusercontent.com/SuperMarimoBros/0626_mcp_handson/main/mcp-practice-python/garbage_collection.db
 wget https://raw.githubusercontent.com/SuperMarimoBros/0626_mcp_handson/refs/heads/main/mcp-practice-python/garbage_collection.csv
 </code></pre>
                     </div>
@@ -127,7 +127,7 @@ uv venv -p 3.13
 uv add "mcp[cli]" requests
 
 # データベースとCSVをディレクトリ内にコピー
-wget https://raw.githubusercontent.com/SuperMarimoBros/0626_mcp_handson/blob/main/mcp-practice-python/garbage_collection.db
+wget https://raw.githubusercontent.com/SuperMarimoBros/0626_mcp_handson/main/mcp-practice-python/garbage_collection.db
 wget https://raw.githubusercontent.com/SuperMarimoBros/0626_mcp_handson/refs/heads/main/mcp-practice-python/garbage_collection.csv
 </code></pre>
                     </div>
@@ -330,7 +330,7 @@ if __name__ == "__main__":
                     </div>
                     <div id="path-windows" class="tab-content" style="display: none;">
                         <div class="bg-gray-900 rounded p-3 font-mono text-sm text-gray-200 relative">
-                            <code id="path-code-2">where uv</code>
+                            <code id="path-code-2">where.exe uv</code>
                             <button class="copy-btn absolute top-2 right-2" onclick="copyCode(this, 'path-code-2')" style="font-size: 0.75rem; padding: 0.125rem 0.5rem;">コピー</button>
                         </div>
                     </div>
@@ -354,6 +354,7 @@ if __name__ == "__main__":
                 <h3 class="text-xl font-semibold text-indigo-300 mb-4">Claude Desktop</h3>
                 <ol class="list-decimal list-inside space-y-3 text-gray-300 mb-6">
                     <li>Claude Desktopを起動します（すでに起動中の場合は、再起動してください）。</li>
+                    <li>NOTE: Windowsの場合は左上の「ファイル」→「終了」を押下して終了して、再起動して下さい。</li>
                     <li>「検索とツール」を開き、「mcp-practice-python」が追加されていることを確認します。</li>
                     <li>以下のプロンプトを試してみてください。</li>
                 </ol>
