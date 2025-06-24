@@ -1,0 +1,464 @@
+
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MCP基本設定ガイド</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #111827;
+            color: #d1d5db;
+        }
+        .code-block {
+            background-color: #1f2937;
+            border: 1px solid #374151;
+            border-radius: 0.5rem;
+            margin-bottom: 1.5rem;
+            overflow: hidden;
+        }
+        .code-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.5rem 1rem;
+            background-color: #374151;
+            font-size: 0.875rem;
+            color: #e5e7eb;
+        }
+        .code-content {
+            padding: 1rem;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+            font-family: monospace;
+            font-size: 0.9rem;
+            line-height: 1.5;
+            color: #d1d5db;
+        }
+        .copy-btn {
+            background-color: #4b5563;
+            color: #fff;
+            border: none;
+            padding: 0.25rem 0.75rem;
+            border-radius: 0.375rem;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+        .copy-btn:hover {
+            background-color: #6b7280;
+        }
+        .copy-btn.copied {
+            background-color: #22c55e;
+        }
+        .tab-btn {
+            padding: 0.5rem 1rem;
+            border-radius: 0.375rem;
+            cursor: pointer;
+            background-color: transparent;
+            color: #9ca3af;
+            border: 1px solid #374151;
+            margin-right: 0.5rem;
+        }
+        .tab-btn.active {
+            background-color: #4f46e5;
+            color: #fff;
+            border-color: #4f46e5;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="max-w-4xl mx-auto p-4 sm:p-6 lg:p-8">
+        
+        <header class="mb-10">
+            <h1 class="text-3xl sm:text-4xl font-bold text-white mb-2">Part.2: 実践編</h1>
+            <p class="text-lg text-gray-400">MCP (Multi-turn Conversational Protocol) の基本的な環境構築と利用方法のガイドです。</p>
+        </header>
+
+        <main class="space-y-12">
+            <!-- Step 1 -->
+            <section>
+                <h2 class="text-2xl font-bold text-white border-l-4 border-indigo-500 pl-4 mb-6">1. プロジェクト環境構築</h2>
+                <div class="tabs" id="env-tabs">
+                    <button class="tab-btn active" data-group="env" data-tab="macos-linux">macOS / Linux</button>
+                    <button class="tab-btn" data-group="env" data-tab="windows">Windows</button>
+                </div>
+                <div id="env-macos-linux" class="tab-content mt-4">
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span>macOS / Linux</span>
+                            <button class="copy-btn" onclick="copyCode(this, 'env-code-1')">コピー</button>
+                        </div>
+                        <pre id="env-code-1" class="code-content"><code># 新しいディレクトリとプロジェクトを作成
+uv init mcp-practice-python
+cd mcp-practice-python
+
+# 仮想環境を作成し、仮想環境を有効化
+uv venv
+source .venv/bin/activate
+
+# 仮想環境にパッケージの依存関係をインストール
+uv add "mcp[cli]" requests
+
+# データベースとCSVをディレクトリ内にコピー
+wget https://raw.githubusercontent.com/SuperMarimoBros/0626_mcp_handson/blob/main/mcp-practice-python/garbage_collection.db
+wget https://raw.githubusercontent.com/SuperMarimoBros/0626_mcp_handson/refs/heads/main/mcp-practice-python/garbage_collection.csv
+</code></pre>
+                    </div>
+                </div>
+                <div id="env-windows" class="tab-content mt-4" style="display: none;">
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span>Windows</span>
+                            <button class="copy-btn" onclick="copyCode(this, 'env-code-2')">コピー</button>
+                        </div>
+                        <pre id="env-code-2" class="code-content"><code># 新しいディレクトリとプロジェクトを作成
+uv init mcp-practice-python
+cd mcp-practice-python
+
+# 仮想環境を作成し、仮想環境を有効化
+uv venv
+.venv\Scripts\activate
+
+# 仮想環境にパッケージの依存関係をインストール
+uv add "mcp[cli]" requests
+
+# データベースとCSVをディレクトリ内にコピー
+wget https://raw.githubusercontent.com/SuperMarimoBros/0626_mcp_handson/blob/main/mcp-practice-python/garbage_collection.db
+wget https://raw.githubusercontent.com/SuperMarimoBros/0626_mcp_handson/refs/heads/main/mcp-practice-python/garbage_collection.csv
+</code></pre>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Step 2 -->
+            <section>
+                <h2 class="text-2xl font-bold text-white border-l-4 border-indigo-500 pl-4 mb-6">2. main.pyの書き換え</h2>
+                <p class="mb-4 text-gray-300">main.pyを以下のコードに書き換えて下さい。</p>
+                <div class="code-block">
+                    <div class="code-header">
+                        <span>main.py</span>
+                        <button class="copy-btn" onclick="copyCode(this, 'main-py-code')">コピー</button>
+                    </div>
+                    <pre id="main-py-code" class="code-content"><code>from mcp.server.fastmcp import FastMCP
+import sqlite3
+import os
+from dotenv import load_dotenv
+import requests
+
+load_dotenv()
+SLACK_API_URL = os.getenv("SLACK_API_URL")
+if not SLACK_API_URL:
+    raise ValueError("環境変数 SLACK_API_URL が設定されていません")
+DB_FILE = "garbage_collection.db"
+
+# Initialize FastMCP server
+mcp = FastMCP("mcp-garbage")
+
+@mcp.tool()
+def search_garbage_collection(query: str) -> str:
+    """
+    クエリに基づいてゴミの集荷日を検索する
+    
+    Args:
+        query: SQLのSELECTクエリ（ゴミ収集スケジュールテーブル: garbage_schedule）
+    
+    Returns:
+        str: クエリ結果をフォーマットした文字列。結果がない場合はその旨を返す。
+        
+    テーブル構造:
+        - 日付 (TEXT): ゴミ収集日の日付
+        - 曜 (TEXT): 曜日
+        - 地区 (TEXT): 収集対象地区
+        - ゴミ種別コード (INTEGER): ゴミの種別を表すコード
+        
+    例:
+        SELECT * FROM garbage_schedule WHERE 地区 = '中央区①'
+        SELECT 日付, ゴミ種別コード FROM garbage_schedule WHERE 曜 = '月曜日'
+    
+    注意:
+        セキュリティ上の理由により、SELECT文のみ実行可能です。
+    """
+    # SELECT文以外を弾く簡易的なセキュリティチェック
+    # このチェックは非常に基本的なもので、実際のアプリケーションではより堅牢なセキュリティ対策が必要です。
+    if not query.strip().upper().startswith("SELECT"):
+        return "Error: Only SELECT queries are allowed1213."
+
+    with sqlite3.connect(DB_FILE) as conn:
+        conn.row_factory = sqlite3.Row
+        cur = conn.cursor()
+        try:
+            cur.execute(query)
+            results = cur.fetchall()
+            
+            if not results:
+                return "クエリの実行は成功しましたが、結果が見つかりませんでした。"
+            
+            # 結果を辞書形式でフォーマットして返す
+            formatted_results = []
+            for row in results:
+                row_dict = dict(row)
+                formatted_results.append(str(row_dict))
+            
+            return f"クエリ結果:\n" + "\n".join(formatted_results)
+            
+        except sqlite3.Error as e:
+            return f"SQLエラー: {str(e)}"
+
+@mcp.tool()
+def post_to_slack(message: str) -> str:
+    """
+    Slackにメッセージを投稿する
+    
+    Args:
+        message: 投稿するメッセージ
+        
+    Returns:
+        成功または失敗のメッセージ
+    """
+    if not SLACK_API_URL:
+        return "Error: Slack API URL is not configured."
+    
+    try:
+        response = requests.post(
+            SLACK_API_URL, 
+            json={"message": message},
+            headers={"Content-Type": "application/json"}
+        )
+        response.raise_for_status()
+        return "メッセージがSlackに投稿されました。"
+    except requests.RequestException as e:
+        return f"Slackへの投稿に失敗しました: {str(e)}"
+
+if __name__ == "__main__":
+    mcp.run()</code></pre>
+                </div>
+            </section>
+
+            <!-- Step 3 -->
+            <section>
+                <h2 class="text-2xl font-bold text-white border-l-4 border-indigo-500 pl-4 mb-6">3. MCPクライアントの設定</h2>
+                <h3 class="text-xl font-semibold text-indigo-300 mb-4">Claude Desktopの場合</h3>
+                <p class="mb-4 text-gray-300">お使いのOSに合わせて、以下のコマンドを実行し設定ファイルを開きます。</p>
+                <div class="tabs" id="config-tabs">
+                    <button class="tab-btn active" data-group="config" data-tab="macos-linux">macOS / Linux</button>
+                    <button class="tab-btn" data-group="config" data-tab="windows">Windows</button>
+                </div>
+                <div id="config-macos-linux" class="tab-content mt-4">
+                     <div class="code-block">
+                        <div class="code-header">
+                            <span>macOS / Linux</span>
+                            <button class="copy-btn" onclick="copyCode(this, 'config-cmd-1')">コピー</button>
+                        </div>
+                        <pre id="config-cmd-1" class="code-content"><code>code ~/Library/Application\ Support/Claude/claude_desktop_config.json</code></pre>
+                    </div>
+                </div>
+                <div id="config-windows" class="tab-content mt-4" style="display: none;">
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span>Windows</span>
+                            <button class="copy-btn" onclick="copyCode(this, 'config-cmd-2')">コピー</button>
+                        </div>
+                        <pre id="config-cmd-2" class="code-content"><code>code $env:AppData\Claude\claude_desktop_config.json</code></pre>
+                    </div>
+                </div>
+                                
+                <div class="mb-4 p-4 bg-blue-800/20 border border-blue-500/30 rounded-lg">
+                    <p class="font-bold text-blue-300 mb-2">NOTE:</p>
+                    <p class="text-gray-300 mb-4">`code`コマンドが使えない場合は、以下のコマンドでディレクトリを開いてから、手動で`claude_desktop_config.json`ファイルを作成・編集してください。</p>
+                    
+                    <div class="tabs mb-2">
+                        <button class="tab-btn active" data-group="dir" data-tab="macos-linux" style="font-size: 0.875rem; padding: 0.25rem 0.75rem;">macOS / Linux</button>
+                        <button class="tab-btn" data-group="dir" data-tab="windows" style="font-size: 0.875rem; padding: 0.25rem 0.75rem;">Windows</button>
+                    </div>
+                    
+                    <div id="dir-macos-linux" class="tab-content">
+                        <div class="bg-gray-900 rounded p-3 font-mono text-sm text-gray-200 relative">
+                            <code id="dir-code-1">open ~/Library/Application\ Support/Claude/</code>
+                            <button class="copy-btn absolute top-2 right-2" onclick="copyCode(this, 'dir-code-1')" style="font-size: 0.75rem; padding: 0.125rem 0.5rem;">コピー</button>
+                        </div>
+                    </div>
+                    <div id="dir-windows" class="tab-content" style="display: none;">
+                        <div class="bg-gray-900 rounded p-3 font-mono text-sm text-gray-200 relative">
+                            <code id="dir-code-2">explorer $env:AppData\Claude\</code>
+                            <button class="copy-btn absolute top-2 right-2" onclick="copyCode(this, 'dir-code-2')" style="font-size: 0.75rem; padding: 0.125rem 0.5rem;">コピー</button>
+                        </div>
+                    </div>
+                </div>
+
+                <p class="mt-6 mb-4 text-gray-300">開いた `claude_desktop_config.json` に以下の内容を追記します。</p>
+                <div class="code-block">
+                    <div class="code-header">
+                        <span>claude_desktop_config.json</span>
+                        <button class="copy-btn" onclick="copyCode(this, 'config-json-code')">コピー</button>
+                    </div>
+                    <pre id="config-json-code" class="code-content"><code>{
+  "mcpServers": {
+    "mcp-practice-python": {
+      "command": "uv",
+      "args": [
+        "--directory",
+        "<ここを絶対パスに書き換えて下さい>",
+        "run",
+        "python",
+        "main.py"
+      ],
+      "env": {
+        "SLACK_API_URL":"https://d4rlr7tujk.execute-api.ap-northeast-1.amazonaws.com/Prod/messages/create"
+      }
+    }
+  }</code></pre>
+                </div>
+
+                <div class="mt-6 p-4 bg-gray-800 border border-yellow-500/30 rounded-lg">
+                    <p class="font-bold text-yellow-300 mb-2">NOTE:</p>
+                    <p class="text-gray-300 mb-4">`command`フィールドに`uv`実行ファイルのフルパスを指定する必要がある場合があります。その時は、以下のコマンドでパスを取得できます。</p>
+                    
+                    <div class="tabs mb-2">
+                        <button class="tab-btn active" data-group="path" data-tab="macos-linux" style="font-size: 0.875rem; padding: 0.25rem 0.75rem;">macOS / Linux</button>
+                        <button class="tab-btn" data-group="path" data-tab="windows" style="font-size: 0.875rem; padding: 0.25rem 0.75rem;">Windows</button>
+                    </div>
+                    
+                    <div id="path-macos-linux" class="tab-content">
+                        <div class="bg-gray-900 rounded p-3 font-mono text-sm text-gray-200 relative">
+                            <code id="path-code-1">which uv</code>
+                            <button class="copy-btn absolute top-2 right-2" onclick="copyCode(this, 'path-code-1')" style="font-size: 0.75rem; padding: 0.125rem 0.5rem;">コピー</button>
+                        </div>
+                    </div>
+                    <div id="path-windows" class="tab-content" style="display: none;">
+                        <div class="bg-gray-900 rounded p-3 font-mono text-sm text-gray-200 relative">
+                            <code id="path-code-2">where uv</code>
+                            <button class="copy-btn absolute top-2 right-2" onclick="copyCode(this, 'path-code-2')" style="font-size: 0.75rem; padding: 0.125rem 0.5rem;">コピー</button>
+                        </div>
+                    </div>
+                </div>
+
+                <p class="mt-6 mb-4 text-gray-300">プロジェクトの絶対パスは、以下のコマンドで確認できます。表示されたパスを `claude_desktop_config.json` の `<ここを絶対パスに書き換えて下さい>` の部分に貼り付けてください。<br/>MCPの基本で使ったパスと同じになるはずです。</p>
+                 <div class="code-block">
+                    <div class="code-header">
+                        <span>Bash</span>
+                        <button class="copy-btn" onclick="copyCode(this, 'pwd-code')">コピー</button>
+                    </div>
+                    <pre id="pwd-code" class="code-content"><code>pwd
+
+# 実行例：/Users/USER_NAME/Desktop/MCPハンズオン/mcp-practice-python</code></pre>
+                </div>
+            </section>
+
+            <!-- Step 4 -->
+            <section>
+                <h2 class="text-2xl font-bold text-white border-l-4 border-indigo-500 pl-4 mb-6">4. MCPクライアントから呼び出し</h2>
+                <h3 class="text-xl font-semibold text-indigo-300 mb-4">Claude Desktop</h3>
+                <ol class="list-decimal list-inside space-y-3 text-gray-300 mb-6">
+                    <li>Claude Desktopを起動します（すでに起動中の場合は、再起動してください）。</li>
+                    <li>「検索とツール」を開き、「mcp-practice-python」が追加されていることを確認します。</li>
+                    <li>以下のプロンプトを試してみてください。</li>
+                </ol>
+
+                <div class="code-block">
+                    <div class="code-header">
+                        <span>プロンプト例 1</span>
+                        <button class="copy-btn" onclick="copyCode(this, 'prompt-1')">コピー</button>
+                    </div>
+                    <pre id="prompt-1" class="code-content"><code>mcp-practice-pythonで可能なツールを表示</code></pre>
+                </div>
+                <div class="code-block">
+                    <div class="code-header">
+                        <span>プロンプト例 2</span>
+                        <button class="copy-btn" onclick="copyCode(this, 'prompt-2')">コピー</button>
+                    </div>
+                    <pre id="prompt-2" class="code-content"><code>中央区①は明日何ゴミの日？</code></pre>
+                </div>
+                結果が帰ってきたらSlackに投稿してみましょう。
+                <div class="code-block">
+                    <div class="code-header">
+                        <span>プロンプト例 3</span>
+                        <button class="copy-btn" onclick="copyCode(this, 'prompt-3')">コピー</button>
+                    </div>
+                    <pre id="prompt-3" class="code-content"><code>xxxとタイトルをつけてslackに投稿して。</code></pre>
+                </div>
+            </section>
+
+            <!-- MCP検索とツールの画像 -->
+            <section>
+                <h2 class="text-2xl font-bold text-white border-l-4 border-indigo-500 pl-4 mb-6">補足： Claude DesktopのMCP構築完了画面</h2>
+                <p class="mb-4 text-gray-300">Claude Desktopで「mcp-basic-python」が正常に追加された状態の画面例です。</p>
+                <div class="flex justify-center">
+                    <img src="assets/MCPの検索とツール.png" alt="MCPの検索とツール画面" class="max-w-full h-auto rounded-lg border border-gray-600">
+                </div>
+            </section>
+        </main>
+        
+        <footer class="text-center mt-12 py-6 border-t border-gray-700">
+            <p class="text-gray-500">MCP Basic Setup Guide</p>
+        </footer>
+    </div>
+
+    <script>
+        // Initialize tab functionality when page loads
+        document.addEventListener('DOMContentLoaded', function() {
+            // Add click event listeners to all tab buttons
+            document.querySelectorAll('.tab-btn').forEach(button => {
+                button.addEventListener('click', function() {
+                    const group = this.getAttribute('data-group');
+                    const tab = this.getAttribute('data-tab');
+                    showTab(group, tab);
+                });
+            });
+        });
+
+        function showTab(group, tabId) {
+            // Hide all tab content divs in the same group (only .tab-content elements)
+            document.querySelectorAll(`.tab-content[id^="${group}-"]`).forEach(tabContent => {
+                tabContent.style.display = 'none';
+            });
+            
+            // Show the selected tab
+            const targetTab = document.getElementById(`${group}-${tabId}`);
+            if (targetTab) {
+                targetTab.style.display = 'block';
+            } else {
+                console.error(`Target tab not found: ${group}-${tabId}`);
+            }
+            
+            // Update button states for this group only
+            document.querySelectorAll(`[data-group="${group}"]`).forEach(btn => {
+                btn.classList.remove('active');
+                if (btn.getAttribute('data-tab') === tabId) {
+                    btn.classList.add('active');
+                }
+            });
+        }
+
+        function copyCode(button, elementId) {
+            const codeElement = document.getElementById(elementId);
+            const textToCopy = codeElement.innerText || codeElement.textContent;
+            
+            // Using a temporary textarea element for clipboard compatibility
+            const textArea = document.createElement('textarea');
+            textArea.value = textToCopy;
+            document.body.appendChild(textArea);
+            textArea.select();
+            try {
+                document.execCommand('copy');
+                button.textContent = 'コピー完了!';
+                button.classList.add('copied');
+                setTimeout(() => {
+                    button.textContent = 'コピー';
+                    button.classList.remove('copied');
+                }, 2000);
+            } catch (err) {
+                console.error('コピーに失敗しました:', err);
+                button.textContent = '失敗';
+                 setTimeout(() => {
+                    button.textContent = 'コピー';
+                }, 2000);
+            }
+            document.body.removeChild(textArea);
+        }
+    </script>
+</body>
+</html>
