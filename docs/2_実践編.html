@@ -393,29 +393,25 @@ if __name__ == "__main__":
             // Add click event listeners to all tab buttons
             document.querySelectorAll('.tab-btn').forEach(button => {
                 button.addEventListener('click', function() {
-                    const group = this.getAttribute('data-group');
                     const tab = this.getAttribute('data-tab');
-                    showTab(group, tab);
+                    showAllTabs(tab);
                 });
             });
         });
 
-        function showTab(group, tabId) {
-            // Hide all tab content divs in the same group (only .tab-content elements)
-            document.querySelectorAll(`.tab-content[id^="${group}-"]`).forEach(tabContent => {
+        function showAllTabs(tabId) {
+            // すべてのタブコンテンツを非表示にする
+            document.querySelectorAll('.tab-content').forEach(tabContent => {
                 tabContent.style.display = 'none';
             });
             
-            // Show the selected tab
-            const targetTab = document.getElementById(`${group}-${tabId}`);
-            if (targetTab) {
+            // 選択されたタブIDに対応するすべてのコンテンツを表示
+            document.querySelectorAll(`[id$="-${tabId}"]`).forEach(targetTab => {
                 targetTab.style.display = 'block';
-            } else {
-                console.error(`Target tab not found: ${group}-${tabId}`);
-            }
+            });
             
-            // Update button states for this group only
-            document.querySelectorAll(`[data-group="${group}"]`).forEach(btn => {
+            // すべてのタブボタンの状態を更新
+            document.querySelectorAll('.tab-btn').forEach(btn => {
                 btn.classList.remove('active');
                 if (btn.getAttribute('data-tab') === tabId) {
                     btn.classList.add('active');
