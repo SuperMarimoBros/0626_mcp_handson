@@ -206,6 +206,21 @@ if __name__ == "__main__":
                             <button class="copy-btn absolute top-2 right-2" onclick="copyCode(this, 'dir-code-2')" style="font-size: 0.75rem; padding: 0.125rem 0.5rem;">コピー</button>
                         </div>
                     </div>
+                    
+                    <p class="text-gray-300 mt-4 mb-2">`claude_desktop_config.json`ファイルが存在しない場合は、以下のコマンドで作成してください。</p>
+                    
+                    <div id="create-macos-linux" class="tab-content">
+                        <div class="bg-gray-900 rounded p-3 font-mono text-sm text-gray-200 relative">
+                            <code id="create-code-1">touch ~/Library/Application\ Support/Claude/claude_desktop_config.json</code>
+                            <button class="copy-btn absolute top-2 right-2" onclick="copyCode(this, 'create-code-1')" style="font-size: 0.75rem; padding: 0.125rem 0.5rem;">コピー</button>
+                        </div>
+                    </div>
+                    <div id="create-windows" class="tab-content" style="display: none;">
+                        <div class="bg-gray-900 rounded p-3 font-mono text-sm text-gray-200 relative">
+                            <code id="create-code-2">New-Item -Path "$env:AppData\Claude\claude_desktop_config.json" -ItemType File</code>
+                            <button class="copy-btn absolute top-2 right-2" onclick="copyCode(this, 'create-code-2')" style="font-size: 0.75rem; padding: 0.125rem 0.5rem;">コピー</button>
+                        </div>
+                    </div>
                 </div>
 
                 <p class="mt-6 mb-4 text-gray-300">開いた `claude_desktop_config.json` に以下の内容を追記します。</p>
