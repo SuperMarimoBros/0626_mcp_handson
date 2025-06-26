@@ -1,8 +1,8 @@
 # MCPハンズオン練習
 
-2025/06/26に開催した「ゼロから学ぶ！〜MCP入門ハンズオン〜（by CDLE北海道）」(https://jdla.connpass.com/event/358239/)用の
+2025/06/26に開催した「ゼロから学ぶ！〜MCP入門ハンズオン〜（by CDLE北海道）」(https://jdla.connpass.com/event/358239/)
 
-Model Context Protocol (MCP) サーバーの実装練習のサンプルプロジェクト
+用のModel Context Protocol (MCP) サーバーの実装練習のサンプルプロジェクト
 
 以下のMCPハンズオン練習の手順に従って、構築するとローカルで同じものが構築できます！
 
