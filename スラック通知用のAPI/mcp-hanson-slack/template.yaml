@@ -1,0 +1,57 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: >
+  mcp-hanson-slack
+
+  Powertools example
+
+Globals:
+  Function:
+    Timeout: 5
+    MemorySize: 128
+    Runtime: python3.12
+
+    Tracing: Active
+   
+    LoggingConfig:
+      LogFormat: JSON
+  Api:
+    TracingEnabled: true
+Resources:
+  SlackFunctionArn:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: mcp-hanson-slack
+      Role: <YOUR_IAM_ROLE_ARN> # Replace with your IAM role ARN
+      Handler: app.lambda_handler
+      CodeUri: app/
+      Description: Create a message in the Slack channel
+      Architectures:
+      - x86_64
+      Tracing: Active
+      Events:
+        HelloPath:
+          Type: Api
+          Properties:
+            Path: /messages/create
+            Method: POST
+      Environment:
+        Variables:
+          POWERTOOLS_SERVICE_NAME: PowertoolsHelloWorld
+          POWERTOOLS_METRICS_NAMESPACE: Powertools
+          LOG_LEVEL: INFO
+          SLACK_API_URL: "<YOUR_SLACK_API_URL>" # Replace with your Slack API URL
+          SLACK_TOKEN: "<YOUR_SLACK_TOKEN>" # Replace with your Slack token
+          SLACK_CHANNEL: "<YOUR_SLACK_CHANNEL>" # Replace with your Slack channel
+      Tags:
+        LambdaPowertools: python
+
+Outputs:
+  SlackApiUrl:
+    Description: API Gateway endpoint URL for Prod environment for Slack Function
+    Value: !Sub "https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/messages/create"
+
+  SlackFunctionArn:
+    Description: SlackFunctionArn ARN
+    Value: !GetAtt SlackFunctionArn.Arn
+
