@@ -32,7 +32,7 @@ def search_garbage_collection(query: str) -> str:
         
     例:
         SELECT * FROM garbage_schedule WHERE 地区 = '中央区①'
-        SELECT 日付, ゴミ種別コード FROM garbage_schedule WHERE 曜 = '月曜日'
+        SELECT 日付, ゴミ種別コード FROM garbage_schedule WHERE 曜 = '月'
     
     注意:
         セキュリティ上の理由により、SELECT文のみ実行可能です。
