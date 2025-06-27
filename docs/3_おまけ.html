@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>おまけ - LLMを活用したMCP開発と参考資料</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #111827;
+            color: #d1d5db;
+        }
+        .code-block {
+            background-color: #1f2937;
+            border: 1px solid #374151;
+            border-radius: 0.5rem;
+            margin-bottom: 1.5rem;
+            overflow: hidden;
+        }
+        .code-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.5rem 1rem;
+            background-color: #374151;
+            font-size: 0.875rem;
+            color: #e5e7eb;
+        }
+        .code-content {
+            padding: 1rem;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+            font-family: monospace;
+            font-size: 0.9rem;
+            line-height: 1.5;
+            color: #d1d5db;
+        }
+        .copy-btn {
+            background-color: #4b5563;
+            color: #fff;
+            border: none;
+            padding: 0.25rem 0.75rem;
+            border-radius: 0.375rem;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+        .copy-btn:hover {
+            background-color: #6b7280;
+        }
+        .info-box {
+            background-color: #1e40af;
+            background-image: linear-gradient(to right, #1e40af, #3b82f6);
+            border-radius: 0.5rem;
+            padding: 1rem;
+            margin-bottom: 1.5rem;
+        }
+        .warning-box {
+            background-color: #92400e;
+            background-image: linear-gradient(to right, #92400e, #d97706);
+            border-radius: 0.5rem;
+            padding: 1rem;
+            margin-bottom: 1.5rem;
+        }
+        .success-box {
+            background-color: #065f46;
+            background-image: linear-gradient(to right, #065f46, #059669);
+            border-radius: 0.5rem;
+            padding: 1rem;
+            margin-bottom: 1.5rem;
+        }
+        .note-box {
+            background-color: #581c87;
+            background-image: linear-gradient(to right, #581c87, #7c3aed);
+            border-radius: 0.5rem;
+            padding: 1rem;
+            margin-bottom: 1.5rem;
+        }
+        .step-box {
+            background-color: #1f2937;
+            border: 1px solid #374151;
+            border-radius: 0.5rem;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+        .step-number {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 2rem;
+            height: 2rem;
+            background-color: #4f46e5;
+            color: #fff;
+            border-radius: 50%;
+            font-weight: 600;
+            margin-right: 1rem;
+        }
+        .resource-card {
+            background-color: #1f2937;
+            border: 1px solid #374151;
+            border-radius: 0.75rem;
+            padding: 1.5rem;
+            margin-bottom: 1rem;
+            transition: all 0.3s ease;
+        }
+        .resource-card:hover {
+            background-color: #273141;
+            border-color: #4f46e5;
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px -3px rgba(0, 0, 0, 0.3);
+        }
+        .resource-link {
+            color: #60a5fa;
+            text-decoration: none;
+            font-weight: 500;
+        }
+        .resource-link:hover {
+            color: #93c5fd;
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="max-w-4xl mx-auto p-4 sm:p-6 lg:p-8">
+        
+        <!-- ヘッダー -->
+        <header class="mb-8">
+            <nav class="mb-4">
+                <a href="index.html" class="text-indigo-400 hover:text-indigo-300 text-sm">← トップページに戻る</a>
+            </nav>
+            <h1 class="text-3xl sm:text-4xl font-bold text-white mb-4">おまけ</h1>
+            <p class="text-xl text-gray-400">
+                LLMを活用したMCPサーバーの自動生成方法や、学習に役立つ参考資料・リソースを紹介します。
+            </p>
+        </header>
+
+        <main>
+            <!-- LLMでMCPを作る -->
+            <section class="mb-12">
+                <h2 class="text-2xl font-bold text-white border-l-4 border-indigo-500 pl-4 mb-6">
+                    LLMを活用したMCP開発
+                </h2>
+                
+                <div class="info-box">
+                    <h3 class="text-lg font-semibold text-white mb-2">🤖 Building MCP with LLMs</h3>
+                    <p class="text-blue-100 mb-3">
+                        ClaudeなどのLLMを使用してMCPサーバーを効率的に開発する方法を解説します。
+                    </p>
+                    <p class="text-blue-200 text-sm">
+                        📖 以下の手順は、<a href="https://modelcontextprotocol.io/tutorials/building-mcp-with-llms" class="text-blue-300 hover:text-blue-200 underline" target="_blank">https://modelcontextprotocol.io/tutorials/building-mcp-with-llms</a> の内容を元に作成したものとなります
+                    </p>
+                </div>
+
+                <div class="step-box">
+                    <div class="flex items-start mb-4">
+                        <div class="step-number">1</div>
+                        <div>
+                            <h3 class="text-lg font-semibold text-white mb-2">オリジナルの手順の理解</h3>
+                            <p class="text-gray-300 mb-3">
+                                まず、ClaudeがMCPを理解できるよう必要なドキュメントを準備。
+                            </p>
+                            <ul class="space-y-2 text-gray-300 ml-4">
+                                <li class="flex items-start">
+                                    <span class="text-indigo-400 mr-2">•</span>
+                                    <span><a href="https://modelcontextprotocol.io/llms-full.txt" class="resource-link" target="_blank">MCP完全ドキュメント</a>をコピー</span>
+                                </li>
+                                <li class="flex items-start">
+                                    <span class="text-indigo-400 mr-2">•</span>
+                                    <span><a href="https://github.com/modelcontextprotocol/python-sdk" class="resource-link" target="_blank">Python SDK</a>のREADMEをコピー</span>
+                                </li>
+                                <li class="flex items-start">
+                                    <span class="text-indigo-400 mr-2">•</span>
+                                    <span>これらの文書をClaudeとの会話に貼り付け</span>
+                                </li>
+                            </ul>
+                            <p class="text-gray-300 mb-3">
+                                ドキュメントを提出したら、どのようなサーバーを構築したいのかをClaudeに明確に説明。
+                            </p>
+                            <p class="text-gray-300 mb-3">
+                                具体的に以下の点を明記する。
+                            </p>
+                            <ul class="space-y-2 text-gray-300 ml-4">
+                                <li class="flex items-start">
+                                    <span class="text-indigo-400 mr-2">•</span>
+                                    <span>サーバーが公開するリソース</span>
+                                </li>
+                                <li class="flex items-start">
+                                    <span class="text-indigo-400 mr-2">•</span>
+                                    <span>どのようなツールを提供するのか</span>
+                                </li>
+                                <li class="flex items-start">
+                                    <span class="text-indigo-400 mr-2">•</span>
+                                    <span>提供されるべきプロンプト</span>
+                                </li>
+                                <li class="flex items       -start">
+                                    <span class="text-indigo-400 mr-2">•</span>
+                                    <span>どのような外部システムとやり取りする必要があるか</span>    
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="step-box">
+                    <div class="flex items-start mb-4">
+                        <div class="step-number">2</div>
+                        <div>
+                            <h3 class="text-lg font-semibold text-white mb-2">上記を加味してプロンプトのみで依頼</h3>
+    
+                            <div class="code-block">
+                                <div class="code-header">
+                                    <span>プロンプト例</span>
+                                    <button class="copy-btn" onclick="copyToClipboard('prompt-example')">コピー</button>
+                                </div>
+                                <div class="code-content" id="prompt-example">参考文献に従って以下の機能を持つMCPサーバーを作成してください：
+# 機能
+- MCPサーバー名は「postgressql-mcp-server」
+- ローカル環境のPostgreSQLデータベースに接続
+- テーブルスキーマをリソースとして公開
+- 読み取り専用のSQLクエリを実行するツールを提供
+- 一般的なデータ分析タスク用のプロンプトを含める
+
+# 参考文献
+- https://modelcontextprotocol.io/llms-full.txt
+- https://github.com/modelcontextprotocol/python-sdk</div>
+                            </div>
+                        </div>
+                    </div>
+                                    <p>NOTE: Github Copilot Agent, Cursor, Clineなどのソースエディタ内のコード生成Agentで作成した方が作成効率が良さそうです。2025/06時点では、Claude 4が良さげです。</p>
+                </div>
+
+
+                <div class="step-box">
+                    <div class="flex items-start mb-4">
+                        <div class="step-number">3</div>
+                        <div>
+                            <h3 class="text-lg font-semibold text-white mb-2">デバック</h3>
+                            <p class="text-gray-300 mb-3">
+                                よくあるエラーの解決をLLMに依頼する際のプロンプト例：
+                            </p>
+                            <div class="code-block">
+                                <div class="code-header">
+                                    <span>テスト依頼</span>
+                                    <button class="copy-btn" onclick="copyToClipboard('error-prompt')">コピー</button>
+                                </div>
+                                <div class="code-content" id="error-prompt">postgressql-mcp-serverをテストして</div>
+                            </div>
+                            <div class="code-block">
+                                <div class="code-header">
+                                    <span>エラー解消依頼</span>
+                                    <button class="copy-btn" onclick="copyToClipboard('error-prompt')">コピー</button>
+                                </div>
+                                <div class="code-content" id="error-prompt">postgressql-mcp-serverの接続エラーを解消</div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 参考資料 -->
+            <section class="mb-12">
+                <h2 class="text-2xl font-bold text-white border-l-4 border-indigo-500 pl-4 mb-6">
+                    学習に役立つ参考資料
+                </h2>
+
+                <div class="success-box">
+                    <h3 class="text-lg font-semibold text-white mb-2">🎉 今日のハンズオンの後に読めば理解x100倍増し！！</h3>
+                    <p class="text-green-100">
+                        基本を学んだ後に以下の資料を読むことで、MCPへの理解がさらに深まります。
+                    </p>
+                </div>
+
+                <!-- 公式ドキュメント -->
+                <div class="resource-card">
+                    <h3 class="text-lg font-semibold text-white mb-3">📚 公式ドキュメント</h3>
+                    <div class="bg-gray-800/50 rounded-lg p-4">
+                        <h4 class="font-semibold text-indigo-300 mb-2">MCP公式ドキュメント</h4>
+                        <p class="text-gray-300 text-sm mb-3">
+                            Model Context Protocolの公式ドキュメント。最新の仕様や実装例が掲載されています。
+                        </p>
+                        <a href="https://modelcontextprotocol.io/introduction" 
+                           class="resource-link" 
+                           target="_blank">
+                            modelcontextprotocol.io/introduction →
+                        </a>
+                    </div>
+                </div>
+
+                <!-- 著名な開発者の記事 -->
+                <div class="resource-card">
+                    <h3 class="text-lg font-semibold text-white mb-3">✍️ 著名な開発者のブログ・記事</h3>
+                    
+                    <div class="space-y-4">
+                        <!-- みのるんさん -->
+                        <div class="bg-gray-800/50 rounded-lg p-4">
+                            <h4 class="font-semibold text-indigo-300 mb-2">みのるんさん</h4>
+                            <p class="text-gray-300 text-sm mb-3">
+                                「やさしいMCP入門」- MCPの基本概念から実装まで、わかりやすく解説されたスライド資料です。
+                            </p>
+                            <a href="https://speakerdeck.com/minorun365/yasasiimcpru-men" 
+                               class="resource-link" 
+                               target="_blank">
+                                やさしいMCP入門 →
+                            </a>
+                        </div>
+
+                        <!-- からあげさん -->
+                        <div class="bg-gray-800/50 rounded-lg p-4">
+                            <h4 class="font-semibold text-indigo-300 mb-2">からあげさん</h4>
+                            <p class="text-gray-300 text-sm mb-3">
+                                「MCP入門 〜面倒なことはAIエージェントにやらせよう〜」- 実践的な観点からMCPの活用方法を紹介。
+                            </p>
+                            <a href="https://www.docswell.com/s/karaage0703/ZR2DRJ-2025-06-10-235428" 
+                               class="resource-link" 
+                               target="_blank">
+                                MCP入門 〜面倒なことはAIエージェントにやらせよう〜 →
+                            </a>
+                        </div>
+
+                        <!-- 松尾研究室 -->
+                        <div class="bg-gray-800/50 rounded-lg p-4">
+                            <h4 class="font-semibold text-indigo-300 mb-2">松尾研究室テックブログ</h4>
+                            <p class="text-gray-300 text-sm mb-3">
+                                「MCP入門」- 技術的な詳細とともに、MCPの仕組みを深く理解できる記事です。
+                            </p>
+                            <a href="https://zenn.dev/mkj/articles/0ed4d02ef3439c" 
+                               class="resource-link" 
+                               target="_blank">
+                                MCP入門 →
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- まとめ -->
+            <section class="mb-12">
+                <div class="note-box">
+                    <h3 class="text-lg font-semibold text-white mb-3">🚀 次のステップ</h3>
+                    <div class="text-purple-100 space-y-2">
+                        <p>
+                            今日のハンズオンでMCPの基本を学びました。次は以下のステップで学習を続けましょう：
+                        </p>
+                        <ol class="list-decimal list-inside space-y-1 ml-4">
+                            <li>上記の参考資料を読んで理解を深める</li>
+                            <li>自分のユースケースに合わせたMCPサーバーを設計</li>
+                            <li>Claudeやコード生成Agentを活用して実装</li>
+                        </ol>
+                    </div>
+                </div>
+            </section>
+        </main>
+        
+        <footer class="text-center mt-16 py-8 border-t border-gray-700">
+            <p class="text-gray-500">MCPハンズオン練習 - おまけ</p>
+            <div class="mt-4">
+                <a href="index.html" class="text-indigo-400 hover:text-indigo-300 text-sm">← トップページに戻る</a>
+            </div>
+        </footer>
+    </div>
+
+    <script>
+        function copyToClipboard(elementId) {
+            const element = document.getElementById(elementId);
+            const text = element.textContent;
+            navigator.clipboard.writeText(text).then(function() {
+                // ボタンのテキストを一時的に変更
+                const button = event.target;
+                const originalText = button.textContent;
+                button.textContent = 'コピー済み!';
+                button.style.backgroundColor = '#059669';
+                setTimeout(function() {
+                    button.textContent = originalText;
+                    button.style.backgroundColor = '#4b5563';
+                }, 2000);
+            });
+        }
+
+        // スムーススクロール
+        document.addEventListener('DOMContentLoaded', function() {
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    document.querySelector(this.getAttribute('href')).scrollIntoView({
+                        behavior: 'smooth'
+                    });
+                });
+            });
+        });
+    </script>
+</body>
+</html>

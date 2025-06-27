@@ -75,7 +75,7 @@
                     <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mt-6">
                         <div class="bg-blue-900/20 border border-blue-500/30 rounded-lg p-4 text-center">
                             <div class="text-2xl font-bold text-blue-300 mb-2">Part 1</div>
-                            <div class="text-sm text-gray-300">基本設定</div>
+                            <div class="text-sm text-gray-300">MCPの基本</div>
                         </div>
                         <div class="bg-green-900/20 border border-green-500/30 rounded-lg p-4 text-center">
                             <div class="text-2xl font-bold text-green-300 mb-2">Part 2</div>
@@ -126,18 +126,20 @@
                         </div>
                     </a>
 
-                    <!-- Part 3: 応用編 (準備中) -->
-                    <div class="card opacity-60">
-                        <div class="badge bg-gray-600">Part 3 (準備中)</div>
-                        <h3 class="card-title">おまけ</h3>
-                        <p class="card-description">
-                            LLMを活用したMCPサーバーの自動生成方法や、学習に役立つ参考資料・リソースを紹介します。
-                        </p>
-                        <div class="mt-4 flex flex-wrap gap-2">
-                            <span class="text-xs bg-gray-700 text-gray-300 px-2 py-1 rounded">LLMによるMCPの作成</span>
-                            <span class="text-xs bg-gray-700 text-gray-300 px-2 py-1 rounded">参考資料</span>
+                    <!-- Part 3: おまけ -->
+                    <a href="3_おまけ.html" class="card-link">
+                        <div class="card">
+                            <div class="badge">Part 3</div>
+                            <h3 class="card-title">おまけ</h3>
+                            <p class="card-description">
+                                LLMを活用したMCPサーバーの自動生成方法や、学習に役立つ参考資料・リソースを紹介します。
+                            </p>
+                            <div class="mt-4 flex flex-wrap gap-2">
+                                <span class="text-xs bg-gray-700 text-gray-300 px-2 py-1 rounded">LLMによるMCPの作成</span>
+                                <span class="text-xs bg-gray-700 text-gray-300 px-2 py-1 rounded">参考資料</span>
+                            </div>
                         </div>
-                    </div>
+                    </a>
 
                 </div>
             </section>
@@ -165,6 +167,20 @@
                             <span>VSCode または任意のテキストエディタ</span>
                         </li>
                     </ul>
+                    
+                    <h3 class="text-lg font-semibold text-yellow-300 mb-4 mt-6">使用するSDK</h3>
+                    <div class="bg-gray-800/50 border border-gray-600 rounded-lg p-4">
+                        <p class="text-gray-300 mb-3">
+                            このハンズオンでは、<strong class="text-white">Model Context Protocol Python SDK</strong>を使用してMCPサーバーを実装します。
+                        </p>
+                        <div class="flex items-center space-x-2">
+                            <span class="text-blue-400">🔗</span>
+                            <a href="https://github.com/modelcontextprotocol/python-sdk" target="_blank" rel="noopener noreferrer" 
+                               class="text-blue-400 hover:text-blue-300 underline transition-colors">
+                                Model Context Protocol Python SDK
+                            </a>
+                        </div>
+                    </div>
                 </div>
             </section>
         </main>
